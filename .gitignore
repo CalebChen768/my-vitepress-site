@@ -30,3 +30,6 @@ yarn.lock
 .idea/
 .idea/*
 *.iml
+
+# vitepress
+docs/.vitepress/cache

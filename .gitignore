@@ -32,4 +32,4 @@ yarn.lock
 *.iml
 
 # vitepress
-docs/.vitepress/cache
+.vitepress/cache

@@ -2,8 +2,8 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Caleb's Ink",
-  description: "A personal blog build on Vitepress",
+  title: "My Vitepress Site Demo",
+  description: "A Demo",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [

@@ -1,17 +1,19 @@
-// https://vitepress.dev/guide/custom-theme
-import { h } from 'vue'
-import type { Theme } from 'vitepress'
-import DefaultTheme from 'vitepress/theme'
-import './style.css'
+import Theme from "vitepress/theme";
+import Archives from "./components/Archives.vue";
+import Tags from "./components/Tags.vue";
+import MyLayout from "./components/MyLayout.vue";
+import TwoslashFloatingVue from "@shikijs/vitepress-twoslash/client";
+import "@shikijs/vitepress-twoslash/style.css";
+import type { EnhanceAppContext } from "vitepress";
+
+import "./custom.css";
 
 export default {
-  extends: DefaultTheme,
-  Layout: () => {
-    return h(DefaultTheme.Layout, null, {
-      // https://vitepress.dev/guide/extending-default-theme#layout-slots
-    })
+  extends: Theme,
+  Layout: MyLayout,
+  enhanceApp({ app }: EnhanceAppContext) {
+    app.component("Archives", Archives);
+    app.component("Tags", Tags);
+    app.use(TwoslashFloatingVue);
   },
-  enhanceApp({ app, router, siteData }) {
-    // ...
-  }
-} satisfies Theme
+};

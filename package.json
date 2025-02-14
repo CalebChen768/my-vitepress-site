@@ -1,10 +1,29 @@
 {
+  "name": "viteDoc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "clark-cui <cuirongchuan@163.com>",
+  "license": "MIT",
+  "type": "module",
   "devDependencies": {
-    "vitepress": "^1.6.3"
+    "@shikijs/vitepress-twoslash": "^1.26.1",
+    "dayjs": "^1.11.10",
+    "fast-glob": "^3.3.2",
+    "feed": "^4.2.2",
+    "fs-extra": "^11.2.0",
+    "globby": "14.0.0",
+    "gray-matter": "^4.0.3",
+    "markdown-it": "^14.1.0",
+    "markdown-it-mathjax3": "^4.3.2",
+    "shiki": "^1.26.1",
+    "vitepress": "1.5.0"
   },
   "scripts": {
-    "docs:dev": "vitepress dev",
-    "docs:build": "vitepress build",
-    "docs:preview": "vitepress preview"
+    "dev": "vitepress dev ",
+    "build": "vitepress build ",
+    "serve": "vitepress serve "
+  },
+  "dependencies": {
+    "gitalk": "^1.8.0"
   }
 }

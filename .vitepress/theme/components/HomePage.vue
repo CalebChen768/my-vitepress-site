@@ -1,11 +1,17 @@
 <template>
-  <FireWorksAnimation />
   <ShareCard />
   <h1 class="blog-title">Blogs</h1>
   <div class="blogList">
     <a class="blog" v-for="item in posts" :href="withBase(item.regularPath)">
       <div class="title">{{ item.frontMatter.title }}</div>
-      <div class="date">{{ transDate(item.frontMatter.date) }}</div>
+      <div class="meta">
+        <div class="date">{{ transDate(item.frontMatter.date) }}</div>
+        <div class="tags">
+            <span class="tag" v-for="(tag, index) in item.frontMatter.tags" :key="tag">
+              {{ `#${tag}` }}<span v-if="index < item.frontMatter.tags.length - 1">,</span>
+            </span>
+        </div>
+      </div>
     </a>
   </div>
   <div class="pagination">
@@ -25,7 +31,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import ShareCard from "./ShareCard.vue";
-import FireWorksAnimation from "./FireWorksAnimation.vue";
 import { useData, withBase } from "vitepress";
 interface post {
   regularPath: string;
@@ -149,9 +154,11 @@ const transDate = (date: string) => {
 }
 .blog {
   width: 85%;
+  min-height: 90px ;
+  align-items: flex-start;
   display: block;
   border-radius: 10px;
-  padding: 0 20px;
+  padding: 15px 20px;
   margin: 10px;
   background: var(--vp-c-bg);
   max-width: 600px;
@@ -166,12 +173,35 @@ const transDate = (date: string) => {
 }
 .title {
   color: var(--vp-c-brand-light);
-  font-size: 1.2em;
+  font-size: 1.3em;
+  margin-bottom: 5px;
   font-weight: bold;
 }
 .date {
-  padding-bottom: 7px;
+  //padding-bottom: 7px;
+  margin-right: 10px;
+  white-space: nowrap;
 }
+
+.meta {
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+  color: var(--vp-c-text-2);
+}
+
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  color: var(--vp-c-brand);
+  font-weight: bold;
+  white-space: nowrap; /* 避免单个标签换行 */
+}
+
 .pagination {
   display: flex;
   align-items: center;

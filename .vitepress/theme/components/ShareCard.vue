@@ -1,10 +1,11 @@
 <template>
   <div class="shareCard">
     <h1 class="title">
-      <span>Hi, I'm Clark Cui 👋</span>
+      <span>Hi, I'm Caleb </span>
     </h1>
     <p class="description">
-      A frontend developer(he/him) who is building in web3.
+      I’m currently pursuing a Master’s in Computer Science <br>
+      at the Universiteit van Amsterdam.
     </p>
   </div>
 </template>
@@ -25,6 +26,6 @@
   font-weight: bold;
 }
 .description {
-  margin: 1em 0;
+  margin: 1.6em 0;
 }
 </style>

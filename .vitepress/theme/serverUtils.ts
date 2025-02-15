@@ -9,6 +9,8 @@ export async function getPosts() {
     paths.map(async (item) => {
       const content = await fs.readFile(item, "utf-8");
       const { data } = matter(content);
+
+      if (data.hidden === 1) return null;
       data.date = _convertDate(data.date);
       return {
         frontMatter: data,
@@ -16,13 +18,20 @@ export async function getPosts() {
       };
     })
   );
-  posts.sort(_compareDate);
+    posts = posts.filter(Boolean);
+
+    posts.sort(_compareDate);
   return posts;
 }
 
 function _convertDate(date = new Date().toString()) {
-  const json_date = new Date(date).toJSON();
-  return json_date.split("T")[0];
+  // const json_date = new Date(date).toJSON();
+  // return json_date.split("T")[0];
+    const timestamp = Number(date);
+
+    const msTimestamp = timestamp < 10000000000 ? timestamp * 1000 : timestamp;
+    return new Date(msTimestamp).toISOString().split("T")[0];
+
 }
 
 function _compareDate(obj1, obj2) {

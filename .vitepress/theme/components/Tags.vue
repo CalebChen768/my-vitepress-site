@@ -126,17 +126,25 @@ const getFontSize = (length: number) => {
 }
 .article {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 10px;
   margin: 10px 10px;
   color: var(--vp-c-text-2);
   transition: border 0.3s ease, color 0.3s ease;
 }
 .article:hover {
+  min-width: 0;
   text-decoration: none;
   color: var(--vp-c-brand);
 }
+.title {
+  flex: 1;
+  word-break: break-word;
+}
 .date {
+  white-space: nowrap;
+  margin-left: 10px;
   font-family: Georgia, sans-serif;
 }
 </style>

@@ -42,6 +42,7 @@ onContentUpdated(() => {
   color: var(--vp-c-brand-light);
   overflow-y: auto;
   max-height: 300px;
+  margin-bottom: 2rem;
 }
 .list {
   padding-left: 1.25em;

@@ -21,7 +21,12 @@ const publishDate = ref("");
 dayjs.extend(relativeTime);
 onContentUpdated(() => {
   const { frontmatter } = pageData.value;
-  publishDate.value = dayjs().to(dayjs(frontmatter.date || Date.now()));
+
+  const timestamp = Number(frontmatter.date);
+
+  const msTimestamp = timestamp < 10000000000 ? timestamp * 1000 : timestamp;
+
+  publishDate.value = dayjs().to(dayjs(msTimestamp || Date.now()));
 });
 </script>
 <style scoped>

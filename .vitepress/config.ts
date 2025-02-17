@@ -24,17 +24,14 @@ async function config() {
         },
       ],
     ],
-    // cleanUrls: "with-subfolders",
+    cleanUrls: true,
     lastUpdated: false,
     themeConfig: {
-      // !!!!!here is I add
       themeAuthorName: "Clark Cui",
       themeAuthorURL: "https://github.com/clark-cui/vitepress-blog-zaun",
 
       startYear: 2021,
-      // !!!!!after this line is original
 
-      // repo: "clark-cui/homeSite",
       logo: "/emo-coffee.svg",
       avator: "https://gallery-of-jafari.oss-cn-beijing.aliyuncs.com/caleb.ink/IMG_4821.JPG",
       // search: {
@@ -43,7 +40,7 @@ async function config() {
       docsDir: "/",
       // docsBranch: "master",
       posts: await getPosts(),
-      pageSize: 10,
+      pageSize: 8,
       postLength: await getPostLength(),
       nav: [
         {
@@ -61,7 +58,6 @@ async function config() {
       ],
       socialLinks: [
         { icon: "github", link: "https://github.com/CalebChen768" },
-        // { icon: "mail", link: "https://twitter.com/" },
         {
           icon: {
             svg: `<svg role="img" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="20">
@@ -73,7 +69,7 @@ async function config() {
       ],
       // outline: 2, //设置右侧aside显示层级
       aside: false,
-      // blogs page show firewokrs animation
+
       showFireworksAnimation: false,
     },
     markdown: {

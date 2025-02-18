@@ -1,6 +1,6 @@
 <template>
   <h1 class="title">{{ pageData.title }}</h1>
-  <div class="date">🕒 Published at: {{ publishDate }}</div>
+  <div class="date">Published at: {{ publishDate }}</div>
 </template>
 <script lang="ts" setup>
 import { useData, onContentUpdated } from "vitepress";
@@ -17,6 +17,7 @@ type pageData = {
   relativePath: string;
 };
 const pageData: pageData = useData().page;
+console.log(useData())
 const publishDate = ref("");
 dayjs.extend(relativeTime);
 onContentUpdated(() => {

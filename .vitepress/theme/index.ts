@@ -1,8 +1,8 @@
 import Theme from "vitepress/theme";
 // @ts-ignore
-import Archives from "./components/Archives.vue";
+import Archives from "./pages/Archives.vue";
 // @ts-ignore
-import Tags from "./components/Tags.vue";
+import Tags from "./pages/Tags.vue";
 // @ts-ignore
 import MyLayout from "./components/MyLayout.vue";
 import TwoslashFloatingVue from "@shikijs/vitepress-twoslash/client";

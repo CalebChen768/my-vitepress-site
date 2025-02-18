@@ -1,4 +1,4 @@
-import { getPosts, getPostLength } from "./theme/serverUtils";
+import { getPosts, getPostLength } from "./theme/utils/serverUtils";
 import { transformerTwoslash } from "@shikijs/vitepress-twoslash";
 import mathjax3 from "markdown-it-mathjax3";
 
@@ -81,6 +81,9 @@ async function config() {
       config: (md) => {
         md.use(mathjax3);
       },
+    },
+    sitemap: {
+      hostname: 'https://caleb.ink'
     },
     // vite: {
     //   ssr: {

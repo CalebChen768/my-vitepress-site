@@ -13,11 +13,11 @@
   --vp-c-color-e: #ed7c0c;
 
   --vp-font-family-base: "LXGW WenKai Lite", "Inter var experimental",
-    "Inter var", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  "Inter var", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+  Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   --vp-font-family-mono: "LXGW WenKai Mono Lite", ui-monospace, SFMono-Regular,
-    "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
-    monospace;
+  "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+  monospace;
   --vp-avator-border: #ffffff;
 }
 .dark {

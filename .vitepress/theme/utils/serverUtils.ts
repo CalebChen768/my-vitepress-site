@@ -12,6 +12,7 @@ export async function getPosts() {
 
       if (data.hidden === 1) return null;
       data.date = _convertDate(data.date);
+
       return {
         frontMatter: data,
         regularPath: `/${item.replace(".md", ".html")}`,

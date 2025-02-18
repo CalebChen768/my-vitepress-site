@@ -33,7 +33,7 @@ async function config() {
       startYear: 2021,
 
       logo: "/emo-coffee.svg",
-      avator: "https://gallery-of-jafari.oss-cn-beijing.aliyuncs.com/caleb.ink/IMG_4821.JPG",
+      avatar: "https://gallery-of-jafari.oss-cn-beijing.aliyuncs.com/caleb.ink/IMG_4821.JPG",
       // search: {
       //   provider: "local",
       // },
@@ -67,10 +67,7 @@ async function config() {
           link: "mailto:hj.chen768@gmail.com",
         },
       ],
-      // outline: 2, //设置右侧aside显示层级
       aside: false,
-
-      showFireworksAnimation: false,
     },
     markdown: {
       theme: {
@@ -78,7 +75,7 @@ async function config() {
         dark: "vitesse-dark",
       },
       codeTransformers: [transformerTwoslash()],
-      config: (md) => {
+      config: (md: { use: (arg0: typeof import("markdown-it-mathjax3")) => void; }) => {
         md.use(mathjax3);
       },
     },

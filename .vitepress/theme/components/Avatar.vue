@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <img :src="theme.avator" width="135" height="135" class="avator" />
+    <img :src="theme.avatar" width="135" height="135" class="avatar"  alt=""/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -14,12 +14,12 @@ const { theme } = useData();
   justify-content: center;
   height: 300px;
 }
-.avator {
+.avatar {
   border-radius: 50%;
-  border: 5px solid var(--vp-avator-border);
+  border: 5px solid var(--vp-avatar-border);
 }
 
-@keyframes avator-transform {
+@keyframes avatar-transform {
   from {
     transform: rotate(0);
   }
@@ -27,7 +27,7 @@ const { theme } = useData();
     transform: rotate(360deg);
   }
 }
-.avator:hover {
-  animation: 5s linear 0s infinite avator-transform;
+.avatar:hover {
+  animation: 5s linear 0s infinite avatar-transform;
 }
 </style>

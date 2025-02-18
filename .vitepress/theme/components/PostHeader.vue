@@ -4,7 +4,7 @@
 </template>
 <script lang="ts" setup>
 import { useData, onContentUpdated } from "vitepress";
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";

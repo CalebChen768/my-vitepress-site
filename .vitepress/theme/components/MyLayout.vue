@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <template #doc-before>
-      <Title />
+      <PostHeader />
       <Category />
     </template>
     <template #doc-after>
@@ -9,8 +9,8 @@
         <button @click="back">cd ..</button>
       </div>
     </template>
-   
   </Layout>
+
   <!-- footer copyright -->
   <CopyWright />
 </template>
@@ -18,7 +18,7 @@
 import DefaultTheme from "vitepress/theme";
 import CopyWright from "./FooterCopyright.vue";
 import Category from "./Category.vue";
-import Title from "./Title.vue";
+import PostHeader from "./PostHeader.vue";
 const { Layout } = DefaultTheme;
 const back = () => {
   history.back();

@@ -3,6 +3,7 @@ import Theme from "vitepress/theme";
 import Archives from "./pages/Archives.vue";
 // @ts-ignore
 import Tags from "./pages/Tags.vue";
+// @ts-ignore
 import Home from "./pages/Home.vue";
 // @ts-ignore
 import MyLayout from "./components/MyLayout.vue";

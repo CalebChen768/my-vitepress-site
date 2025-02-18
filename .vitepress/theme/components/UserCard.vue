@@ -1,4 +1,5 @@
 <template>
+  <Avatar />
   <div class="shareCard">
     <h1 class="title">
       <span>Hi, I'm Caleb </span>
@@ -9,7 +10,10 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import Avatar from "./Avatar.vue";
+</script>
+
 <style scoped>
 .shareCard {
   display: flex;

@@ -3,6 +3,7 @@ import Theme from "vitepress/theme";
 import Archives from "./pages/Archives.vue";
 // @ts-ignore
 import Tags from "./pages/Tags.vue";
+import Home from "./pages/Home.vue";
 // @ts-ignore
 import MyLayout from "./components/MyLayout.vue";
 import TwoslashFloatingVue from "@shikijs/vitepress-twoslash/client";
@@ -17,6 +18,7 @@ export default {
   enhanceApp({ app }: EnhanceAppContext) {
     app.component("Archives", Archives);
     app.component("Tags", Tags);
+    app.component("Home", Home);
     app.use(TwoslashFloatingVue);
   },
 };

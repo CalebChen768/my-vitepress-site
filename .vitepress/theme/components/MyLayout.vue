@@ -9,18 +9,14 @@
         <button @click="back">cd ..</button>
       </div>
     </template>
-    <!-- Home slot-->
-    <template #home-hero-before><HomeHero /> </template>
-    <template #home-features-after> <HomePage /></template>
+   
   </Layout>
   <!-- footer copyright -->
   <CopyWright />
 </template>
 <script lang="ts" setup>
 import DefaultTheme from "vitepress/theme";
-import HomeHero from "./HomeHero.vue";
 import CopyWright from "./FooterCopyright.vue";
-import HomePage from "./HomePage.vue";
 import Category from "./Category.vue";
 import Title from "./Title.vue";
 const { Layout } = DefaultTheme;

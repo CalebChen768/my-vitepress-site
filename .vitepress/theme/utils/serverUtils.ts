@@ -46,7 +46,22 @@ async function getPostMDFilePaths() {
   return paths.filter((item) => item.includes("posts/"));
 }
 
+// export async function getPostLength() {
+//   // getPostMDFilePath return type is object not array
+//   return [...(await getPostMDFilePaths())].length;
+// }
+
 export async function getPostLength() {
-  // getPostMDFilePath return type is object not array
-  return [...(await getPostMDFilePaths())].length;
+  const paths = await getPostMDFilePaths();
+  let count = 0;
+  
+  for (const item of paths) {
+    const content = await fs.readFile(item, "utf-8");
+    const { data } = matter(content);
+    if (data.hidden !== 1) {
+      count++;
+    }
+  }
+  
+  return count;
 }

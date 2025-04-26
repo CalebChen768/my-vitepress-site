@@ -82,11 +82,11 @@ async function config() {
     sitemap: {
       hostname: 'https://caleb.ink'
     },
-    // vite: {
-    //   ssr: {
-    //     noExternal: ["vitepress-plugin-twoslash"],
-    //   },
-    // },
+    vite: {
+      ssr: {
+        noExternal: ["vitepress-plugin-twoslash"],
+      },
+    },
   };
 }
 export default config();

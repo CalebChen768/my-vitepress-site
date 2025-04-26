@@ -94,7 +94,7 @@ export function resolveHeaders(headers: any, range?: any): any {
       ? range.level
       : range) || minLevel;
 
-  console.log(levelsRange, "levelsRange");
+  // console.log(levelsRange, "levelsRange");
   const [high, low]: [number, number] =
     typeof levelsRange === "number"
       ? [levelsRange, levelsRange]
@@ -102,7 +102,7 @@ export function resolveHeaders(headers: any, range?: any): any {
       ? [2, 6]
       : levelsRange;
 
-  console.log(high, low, "loooww");
+  // console.log(high, low, "loooww");
   headers = headers.filter((h) => h.level >= high && h.level <= low);
 
   const ret: any = [];

@@ -54,9 +54,10 @@
   //pageCurrent
   let pageCurrent = ref(1);
   // filter index post
-  postsAll = postsAll.filter((item: post) => {
-    return item.regularPath.indexOf("index") < 0;
-  });
+  //postsAll = postsAll.filter((item: post) => {
+  //  return item.regularPath.indexOf("index") < 0;
+  //});
+  //console.log(postsAll)
   // pagination
   let allMap = {};
   for (let i = 0; i < pagesNum; i++) {

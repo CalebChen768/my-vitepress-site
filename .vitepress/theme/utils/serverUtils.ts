@@ -15,7 +15,8 @@ export async function getPosts() {
 
       return {
         frontMatter: data,
-        regularPath: `/${item.replace(".md", ".html")}`,
+        // regularPath: `/${item.replace(".md", ".html")}`,
+        regularPath: `/${item.replace(/\.md$/, ".html")}`,
       };
     })
   );

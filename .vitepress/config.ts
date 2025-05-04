@@ -13,7 +13,7 @@ async function config() {
         {
           rel: "icon",
           type: "image/svg",
-          href: "/emo-coffee.svg",
+          href: "/logo.svg",
         },
       ],
       [
@@ -24,6 +24,7 @@ async function config() {
         },
       ],
     ],
+    base: '/',
     cleanUrls: true,
     lastUpdated: false,
     themeConfig: {
@@ -32,7 +33,7 @@ async function config() {
 
       startYear: 2021,
 
-      logo: "/emo-coffee.svg",
+      logo: "/logo.svg",
       avatar: "https://gallery-of-jafari.oss-cn-beijing.aliyuncs.com/caleb.ink/IMG_4821.JPG",
       // search: {
       //   provider: "local",
@@ -54,6 +55,10 @@ async function config() {
         {
           text: "Archives",
           link: "/archives",
+        },
+        {
+          text: "Me",
+          link: "/me",
         },
       ],
       socialLinks: [

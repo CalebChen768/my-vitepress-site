@@ -6,6 +6,8 @@ import Tags from "./pages/Tags.vue";
 // @ts-ignore
 import Home from "./pages/Home.vue";
 // @ts-ignore
+import Me from "./pages/Me.vue"
+// @ts-ignore
 import MyLayout from "./components/MyLayout.vue";
 import TwoslashFloatingVue from "@shikijs/vitepress-twoslash/client";
 import "@shikijs/vitepress-twoslash/style.css";
@@ -20,6 +22,7 @@ export default {
     app.component("Archives", Archives);
     app.component("Tags", Tags);
     app.component("Home", Home);
+    app.component("Me", Me);
     app.use(TwoslashFloatingVue);
   },
 };

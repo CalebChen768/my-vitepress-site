@@ -8,7 +8,7 @@
           <div class="date">{{ transDate(item.frontMatter.date) }}</div>
           <div class="tags">
               <span class="tag" v-for="(tag, index) in item.frontMatter.tags" :key="tag">
-                {{ `#${tag}` }}<span v-if="index < item.frontMatter.tags.length - 1">,</span>
+                {{ `#${tag}` }}<span v-if="index < item.frontMatter.tags.length - 1">, </span>
               </span>
           </div>
         </div>
@@ -158,7 +158,7 @@
     align-items: center;
   }
   .blog {
-    width: 85%;
+    width: 90%;
     min-height: 90px ;
     align-items: flex-start;
     display: block;
@@ -195,16 +195,18 @@
     color: var(--vp-c-text-2);
   }
   
-  
   .tags {
-    display: flex;
-    flex-wrap: wrap;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    max-width: 100%; 
   }
-  
+
   .tag {
     color: var(--vp-c-brand);
     font-weight: bold;
-    white-space: nowrap; /* 避免单个标签换行 */
+    white-space: nowrap; 
   }
   
   .pagination {

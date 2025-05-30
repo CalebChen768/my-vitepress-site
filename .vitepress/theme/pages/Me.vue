@@ -80,7 +80,7 @@
   .intro {
     text-align: center;
     margin-bottom: 4rem;
-    padding-top: 3rem;
+    padding-top: 1rem;
   }
   
   .name {
@@ -88,13 +88,15 @@
     font-weight: bold;
     color: var(--vp-c-brand-light);
     margin: 1rem 0;
+    padding-bottom: 2rem;
+
   }
   
   .motto {
     font-size: 1.2rem;
     font-style: italic;
     color: var(--vp-c-text-2);
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
   
   .description {
@@ -182,19 +184,18 @@
   
   /* Friend Links */
   .friends-wrapper {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 1.5rem;
-    justify-content: flex-start;
   }
-  
+
   .friend-card {
-    width: 160px;
     background: var(--vp-c-bg);
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s, box-shadow 0.3s;
   }
+
   
   .friend-card:hover {
     transform: translateY(-5px);

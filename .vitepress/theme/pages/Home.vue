@@ -148,6 +148,7 @@
     font-weight: bold;
     font-size: 2rem;
     margin-top: 24px;
+    z-index: 1;
   }
   .blogList {
     padding: 30px 0;

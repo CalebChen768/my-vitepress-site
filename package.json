@@ -19,7 +19,7 @@
     "vitepress": "^1.6.3"
   },
   "scripts": {
-    "dev": "vitepress dev ",
+    "dev": "vitepress dev  --host",
     "build": "vitepress build ",
     "serve": "vitepress serve "
   }

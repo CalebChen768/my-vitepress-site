@@ -1,17 +1,22 @@
 <template>
-  <Avatar />
+  <Avatar @click="showTerminal = true" />
   <div class="shareCard">
     <h1 class="title">
       <span>Hi, I'm Caleb </span>
     </h1>
     <p class="description">
-      I’m currently pursuing a Master’s in Computer Science at the Universiteit van Amsterdam.
+      I'm currently pursuing a Master's in Computer Science at the Universiteit van Amsterdam.
     </p>
   </div>
+  <Terminal :visible="showTerminal" @close="showTerminal = false" />
 </template>
 
-<script lang="ts" setup>
-import Avatar from "./Avatar.vue";
+<script setup>
+import { ref } from 'vue'
+import Avatar from './Avatar.vue'
+import Terminal from './Terminal.vue'
+
+const showTerminal = ref(false)
 </script>
 
 <style scoped>
@@ -22,6 +27,7 @@ import Avatar from "./Avatar.vue";
   padding: 0 15px;
   text-align: center;
 }
+
 .title {
   display: flex;
   align-items: center;
@@ -45,6 +51,11 @@ import Avatar from "./Avatar.vue";
     max-width: 90%;
     font-size: 1.2em;
     text-align: center;
+  }
+  
+  .shareCard {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 }
 </style>

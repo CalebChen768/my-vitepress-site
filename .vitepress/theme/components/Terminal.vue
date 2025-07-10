@@ -21,11 +21,16 @@
                   @keydown.up.prevent="historyUp"
                   @keydown.down.prevent="historyDown"
                   @keydown.tab.prevent="handleTab"
+                  @keydown.ctrl.c.prevent="onCtrlC"
                   @compositionstart="onCompositionStart"
                   @compositionend="onCompositionEnd"
                   ref="inputRef"
                   autocomplete="off"
                   spellcheck="false"
+                  lang="en"
+                  inputmode="text"
+                  autocapitalize="off"
+                  autocorrect="off"
                 />
               </div>
             </div>
@@ -147,15 +152,17 @@
   }
   async function handleCommand() {
     const raw = input.value.trim()
-    if (!raw) return
-  
-    history.value.push(raw)
-    historyIndex = history.value.length
-  
     output.value.push(
       `<span class="shell-prompt">${getShellPrompt()}</span> ` +
       `<span class="shell-cmd">${raw}</span>`
     )
+
+    if (!raw) {
+      return clearInput()
+    }
+
+    history.value.push(raw)
+    historyIndex = history.value.length
   
     const parts = raw.split(/\s+/)
     const cmd = parts[0]
@@ -178,6 +185,10 @@
       const dir = target.replace(/^\/|\/$/g, '')
       if (ROOT_DIRS.includes(dir)) {
         if (dir === 'home') fadeAndJump('/')
+        else if (dir === 'posts') {
+          currentPath.value = '/posts/'
+          return clearInput()
+        }
         else fadeAndJump(`/${dir}`)
         return clearInput()
       }
@@ -264,7 +275,60 @@
       close()
       return clearInput()
     }
-  
+
+    if (cmd === 'rm') {
+      if (raw === 'rm -rf /') {
+        output.value.push('You bad guy')
+        return clearInput()
+      }
+      if (parts.length < 2) {
+        output.value.push('rm: missing operand')
+        return clearInput()
+      }
+      const target = raw.slice(cmd.length).trim().replace(/^["']|["']$/g, '')
+      if (!titleMap[target]) {
+        output.value.push(`rm: cannot remove '${target}': No such file or directory`)
+      } else {
+        output.value.push(`rm: cannot remove '${target}': Permission denied`)
+      }
+      return clearInput()
+    }
+
+    if (cmd === 'mv') {
+      if (parts.length < 3) {
+        output.value.push('mv: missing file operand')
+        return clearInput()
+      }
+      const from = parts[1].replace(/^["']|["']$/g, '')
+      const to = parts[2].replace(/^["']|["']$/g, '')
+      if (!titleMap[from]) {
+        output.value.push(`mv: cannot stat '${from}': No such file or directory`)
+      } else {
+        output.value.push(`mv: cannot move '${from}' to '${to}': Permission denied`)
+      }
+      return clearInput()
+    }
+
+    if (cmd === 'cp') {
+      if (parts.length < 3) {
+        output.value.push('cp: missing file operand')
+        return clearInput()
+      }
+      const from = parts[1].replace(/^["']|["']$/g, '')
+      const to = parts[2].replace(/^["']|["']$/g, '')
+      if (!titleMap[from]) {
+        output.value.push(`cp: cannot stat '${from}': No such file or directory`)
+      } else {
+        output.value.push(`cp: cannot copy '${from}' to '${to}': Permission denied`)
+      }
+      return clearInput()
+    }
+
+    if (cmd === 'sudo') {
+      output.value.push('No no. You are not invited.')
+      return clearInput()
+    }
+
     output.value.push(`bash: ${cmd}: command not found`)
     clearInput()
   }
@@ -280,44 +344,82 @@
     if (skipNextEnter.value) { skipNextEnter.value = false; return }
     handleCommand()
   }
-  function handleTab() {
-    const raw = input.value
-    if (!raw.includes(' ')) {
-      const cmds = ['pwd', 'ls', 'cd', 'cat', 'head', 'tail', 'help', 'clear', 'exit']
-      const m = cmds.filter(c => c.startsWith(raw))
-      if (m.length === 1) input.value = m[0] + ' '
-      return
+function handleTab() {
+  skipNextEnter.value = false
+  const raw = input.value
+  if (!raw.includes(' ')) {
+    const cmds = ['pwd', 'ls', 'cd', 'cat', 'head', 'tail', 'help', 'clear', 'exit', 'rm', 'mv', 'cp', 'sudo']
+    const m = cmds.filter(c => c.startsWith(raw))
+    if (m.length === 1) {
+      input.value = m[0] + ' '
     }
-    const tokens = raw.split(' ')
-    const cmd = tokens[0]
-    if (cmd === 'cd') {
-      const arg = tokens[1] || ''
-      const pref = (arg.match(/^(\.\.\/|\.\/|\/)+/) || [])[0] || ''
-      const core = arg.slice(pref.length)
-      const m = ROOT_DIRS.filter(d => d.startsWith(core))
-      if (m.length === 1) tokens[1] = pref + m[0]
-      input.value = tokens.join(' ')
-      return
-    }
-    if (cmd === 'head' || cmd === 'tail') {
-      let idx = tokens.indexOf('-n') >= 0 ? tokens.indexOf('-n') + 2 : 1
-      const arg = tokens[idx] || ''
-      const pref = (arg.match(/^(\.\.\/|\.\/|\/)+/) || [])[0] || ''
-      const core = arg.slice(pref.length)
-      const m = fileNames.filter(f => f.startsWith(core))
-      if (m.length === 1) tokens[idx] = pref + m[0]
-      input.value = tokens.join(' ')
-      return
-    }
-    if (cmd === 'cat') {
-      const arg = tokens[1] || ''
-      const pref = (arg.match(/^(\.\.\/|\.\/|\/)+/) || [])[0] || ''
-      const core = arg.slice(pref.length)
-      const m = fileNames.filter(f => f.startsWith(core))
-      if (m.length === 1) tokens[1] = pref + m[0]
-      input.value = tokens.join(' ')
-    }
+    return
   }
+  const tokens = raw.split(' ')
+  const cmd = tokens[0]
+  if (cmd === 'cd') {
+    const arg = tokens[1] || ''
+    const pref = (arg.match(/^(\.\.\/|\.\/|\/)+/) || [])[0] || ''
+    const core = arg.slice(pref.length)
+    const m = ROOT_DIRS.filter(d => d.startsWith(core))
+    if (m.length === 1) {
+      const completed = m[0].includes(' ') ? `"${m[0]}"` : m[0]
+      tokens[1] = pref + completed
+    }
+    input.value = tokens.join(' ')
+    return
+  }
+  if (cmd === 'head' || cmd === 'tail') {
+    let idx = tokens.indexOf('-n') >= 0 ? tokens.indexOf('-n') + 2 : 1
+    const arg = tokens[idx] || ''
+    const pref = (arg.match(/^(\.\.\/|\.\/|\/)+/) || [])[0] || ''
+    const core = arg.slice(pref.length)
+    const m = fileNames.filter(f => f.startsWith(core))
+    if (m.length === 1) {
+      const completed = m[0].includes(' ') ? `"${m[0]}"` : m[0]
+      tokens[idx] = pref + completed
+    }
+    input.value = tokens.join(' ')
+    return
+  }
+  if (cmd === 'cat') {
+    const arg = tokens[1] || ''
+    const pref = (arg.match(/^(\.\.\/|\.\/|\/)+/) || [])[0] || ''
+    const core = arg.slice(pref.length)
+    const m = fileNames.filter(f => f.startsWith(core))
+    if (m.length === 1) {
+      const completed = m[0].includes(' ') ? `"${m[0]}"` : m[0]
+      tokens[1] = pref + completed
+    }
+    input.value = tokens.join(' ')
+    return
+  }
+  if (cmd === 'rm') {
+    const arg = tokens[1] || ''
+    const pref = (arg.match(/^(\.\.\/|\.\/|\/)+/) || [])[0] || ''
+    const core = arg.slice(pref.length)
+    const m = fileNames.filter(f => f.startsWith(core))
+    if (m.length === 1) {
+      const completed = m[0].includes(' ') ? `"${m[0]}"` : m[0]
+      tokens[1] = pref + completed
+    }
+    input.value = tokens.join(' ')
+    return
+  }
+  if (cmd === 'mv' || cmd === 'cp') {
+    let idx = tokens.length === 2 ? 1 : 2
+    const arg = tokens[idx] || ''
+    const pref = (arg.match(/^(\.\.\/|\.\/|\/)+/) || [])[0] || ''
+    const core = arg.slice(pref.length)
+    const m = fileNames.filter(f => f.startsWith(core))
+    if (m.length === 1) {
+      const completed = m[0].includes(' ') ? `"${m[0]}"` : m[0]
+      tokens[idx] = pref + completed
+    }
+    input.value = tokens.join(' ')
+    return
+  }
+}
   function historyUp() {
     if (!history.value.length) return
     if (historyIndex > 0) {
@@ -343,27 +445,34 @@
     return `[${shellUser}@${shellHost} ${p}] λ`
   }
   const shellPrompt = computed(getShellPrompt)
+ 
   function prettyPrintFlex(arr) {
     const maxLen = arr.reduce((m, n) => Math.max(m, n.length), 0)
     const colWidth = maxLen + 2
-    const items = arr.map(n => `<span class="ls-item">${n}</span>`).join('')
-    return [`<div class="ls-row" style="--ls-col-width:${colWidth}ch">${items}</div>`]
+    const items = arr
+      .map(n => `<span class="ls-item">${n}</span>`)
+      .join('')
+    return [
+      `<div class="ls-row" style="--ls-col-width:${colWidth}ch">` +
+        items +
+      `</div>`
+    ]
   }
   
-  watch(() => props.visible, v => {
-    if (v) {
-      disableScroll()
-      nextTick(() => {
-        inputRef.value?.focus()
-        scrollToBottom()
-      })
-    } else {
-      // 延迟启用滚动，让关闭动画完成
-      setTimeout(() => {
-        enableScroll()
-      }, 600)
-    }
-  })
+watch(() => props.visible, async v => {
+  if (v) {
+    disableScroll()
+    await nextTick()
+    setTimeout(() => {
+      inputRef.value?.focus()
+      scrollToBottom()
+    }, 50)
+  } else {
+    setTimeout(() => {
+      enableScroll()
+    }, 600)
+  }
+})
   
   onUnmounted(() => {
     enableScroll()
@@ -372,7 +481,15 @@
   
   
   
-  </script>
+function onCtrlC() {
+  const current = input.value
+  output.value.push(
+    `<span class="shell-prompt">${getShellPrompt()}</span> <span class="shell-cmd">${current}^C</span>`
+  )
+  clearInput()
+}
+  
+</script>
 
 
 
@@ -446,12 +563,12 @@
   margin-right: 0.5em;
   font-weight: bold;
   font-size: 1.2em;
-  text-shadow: 
-    0 0 8px var(--terminal-prompt), 
+  text-shadow:
     0 0 4px var(--terminal-prompt),
-    0 0 2px var(--terminal-prompt),
-    0 0 1px rgba(255, 255, 255, 0.8);
+    0 0 8px var(--terminal-prompt),
+    0 0 12px var(--terminal-prompt);
 }
+
 
 .input-line input {
   flex: 1;
@@ -469,11 +586,17 @@
   margin-bottom: 0.2em;
 }
 
-.shell-cmd {
-  font-weight: bold;
-  color: #fff;
-  text-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+/* Style only the prompt span inside rendered output */
+.output-line ::v-deep(.shell-prompt) {
+  color: var(--terminal-prompt);
+  text-shadow:
+    0 0 4px var(--terminal-prompt),
+    0 0 8px var(--terminal-prompt),
+    0 0 12px var(--terminal-prompt);
 }
+
+
+
 
 .close-btn {
   position: absolute;
@@ -564,40 +687,43 @@
   }
 }
 
-/* 支持暗色和亮色模式 */
-:root {
-  --terminal-bg: linear-gradient(135deg, 
-    rgba(30, 30, 32, 0.95) 0%, 
-    rgba(40, 40, 45, 0.9) 50%, 
-    rgba(25, 25, 28, 0.95) 100%);
-  --terminal-border: rgba(255, 255, 255, 0.15);
-  --terminal-text: #b6fcd5;
-  --terminal-prompt: #ffb300;
-  --terminal-overlay: rgba(0, 0, 0, 0.4);
-  --terminal-input-bg: rgba(20, 20, 22, 0.95);
+@media (prefers-color-scheme: dark) {
+  .prompt {
+    color: #D4AF37;
+    text-shadow:
+      0 0 2px #D4AF37,
+      0 0 4px #D4AF37;
+  }
 }
 
-.dark {
-  --terminal-bg: linear-gradient(135deg, 
-    rgba(30, 30, 32, 0.95) 0%, 
-    rgba(40, 40, 45, 0.9) 50%, 
-    rgba(25, 25, 28, 0.95) 100%);
-  --terminal-border: rgba(255, 255, 255, 0.15);
-  --terminal-text: #b6fcd5;
-  --terminal-prompt: #ffb300;
-  --terminal-overlay: rgba(0, 0, 0, 0.4);
-  --terminal-input-bg: rgba(20, 20, 22, 0.95);
+@media (prefers-color-scheme: light) {
+  .prompt {
+    color: #0f172a;
+    text-shadow:
+      0 0 2px #0f172a,
+      0 0 4px #0f172a;
+  }
+}
+:deep(.ls-row) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2ch;
+}
+:deep(.ls-item) {
+  flex: 0 0 var(--ls-col-width);
+  white-space: nowrap;
 }
 
-:root:not(.dark) {
-  --terminal-bg: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.95) 0%, 
-    rgba(250, 250, 255, 0.9) 50%, 
-    rgba(255, 255, 255, 0.95) 100%);
-  --terminal-border: rgba(0, 0, 0, 0.12);
-  --terminal-text: #1a202c;
-  --terminal-prompt: #e53e3e;
-  --terminal-overlay: rgba(255, 255, 255, 0.5);
-  --terminal-input-bg: rgba(248, 248, 252, 0.98);
+</style>
+
+<style>
+/* Global override for shell prompt inside the terminal output */
+.terminal-output .shell-prompt {
+  color: var(--terminal-prompt) !important;
+  text-shadow:
+    0 0 4px var(--terminal-prompt),
+    0 0 8px var(--terminal-prompt),
+    0 0 12px var(--terminal-prompt) !important;
 }
 </style>
+  

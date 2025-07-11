@@ -51,7 +51,38 @@
   })
   const emit = defineEmits(['close'])
   
-  const close = () => emit('close')
+  const isClosing = ref(false)
+  
+  const close = () => {
+    if (isClosing.value) return
+    isClosing.value = true
+    
+    // 添加关闭动画 - 先让终端窗口消失
+    const terminalWindow = document.querySelector('.terminal-window')
+    const terminalOverlay = document.querySelector('.terminal-overlay')
+    
+    if (terminalWindow) {
+      terminalWindow.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+      terminalWindow.style.transform = 'scale(0.85) translateY(50px) rotateX(10deg)'
+      terminalWindow.style.opacity = '0'
+      terminalWindow.style.filter = 'blur(20px)'
+    }
+    
+    // 延迟让背景毛玻璃效果淡出
+    setTimeout(() => {
+      if (terminalOverlay) {
+        terminalOverlay.style.transition = 'all 0.3s ease-out'
+        terminalOverlay.style.backdropFilter = 'blur(0px) saturate(100%) brightness(1)'
+        terminalOverlay.style.webkitBackdropFilter = 'blur(0px) saturate(100%) brightness(1)'
+        terminalOverlay.style.opacity = '0'
+      }
+    }, 200)
+    
+    setTimeout(() => {
+      emit('close')
+      isClosing.value = false
+    }, 700)
+  }
   
   const asciiWelcome = [
     '43 61 6C 65 62 27 73',
@@ -117,19 +148,35 @@
     })
   }
   function fadeAndJump(path) {
+    if (isClosing.value) return
+    isClosing.value = true
     isFading.value = true
-    // 添加淡出动画
+    
+    // 添加更好看的淡出动画
     const terminalWindow = document.querySelector('.terminal-window')
+    const terminalOverlay = document.querySelector('.terminal-overlay')
+    
     if (terminalWindow) {
-      terminalWindow.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
-      terminalWindow.style.transform = 'scale(0.9) translateY(-20px) rotateX(-5deg)'
+      terminalWindow.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+      terminalWindow.style.transform = 'scale(0.9) translateY(-30px) rotateX(-8deg)'
       terminalWindow.style.opacity = '0'
-      terminalWindow.style.filter = 'blur(15px)'
+      terminalWindow.style.filter = 'blur(25px)'
     }
+    
+    // 延迟让背景毛玻璃效果淡出
+    setTimeout(() => {
+      if (terminalOverlay) {
+        terminalOverlay.style.transition = 'all 0.3s ease-out'
+        terminalOverlay.style.backdropFilter = 'blur(0px) saturate(100%) brightness(1)'
+        terminalOverlay.style.webkitBackdropFilter = 'blur(0px) saturate(100%) brightness(1)'
+        terminalOverlay.style.opacity = '0'
+      }
+    }, 250)
     
     setTimeout(() => {
       router.go(path)
-    }, 400)
+      isClosing.value = false
+    }, 800)
   }
   function resolvePath(arg) {
     if (arg.startsWith('/')) return normalize(arg)
@@ -273,7 +320,7 @@
 
     if (cmd === 'exit') {
       close()
-      return clearInput()
+      return
     }
 
     if (cmd === 'rm') {
@@ -463,14 +510,33 @@ watch(() => props.visible, async v => {
   if (v) {
     disableScroll()
     await nextTick()
+    
+    // 重置终端窗口和背景样式，确保动画正常开始
+    const terminalWindow = document.querySelector('.terminal-window')
+    const terminalOverlay = document.querySelector('.terminal-overlay')
+    
+    if (terminalWindow) {
+      terminalWindow.style.transition = ''
+      terminalWindow.style.transform = ''
+      terminalWindow.style.opacity = ''
+      terminalWindow.style.filter = ''
+    }
+    
+    if (terminalOverlay) {
+      terminalOverlay.style.transition = ''
+      terminalOverlay.style.backdropFilter = ''
+      terminalOverlay.style.webkitBackdropFilter = ''
+      terminalOverlay.style.opacity = ''
+    }
+    
     setTimeout(() => {
       inputRef.value?.focus()
       scrollToBottom()
-    }, 50)
+    }, 100)
   } else {
     setTimeout(() => {
       enableScroll()
-    }, 600)
+    }, 800)
   }
 })
   
@@ -531,7 +597,7 @@ function onCtrlC() {
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  transform-origin: center;
+  /* 移除重复的 transform-origin，这个在下面的动画部分已经设置了 */
 }
 
 .terminal-output {
@@ -618,48 +684,69 @@ function onCtrlC() {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  transform: scale(1);
 }
 
 .close-btn:hover {
   background: linear-gradient(135deg, #ff1744 0%, #d50000 100%);
-  transform: scale(1.05);
+  transform: scale(1.1) rotate(90deg);
   box-shadow: 
     0 6px 20px rgba(255, 82, 82, 0.6),
     0 0 0 1px rgba(255, 255, 255, 0.2);
 }
 
-/* ✨ 优化的淡入淡出动画 */
+.close-btn:active {
+  transform: scale(0.95) rotate(90deg);
+}
+
+/* ✨ 更好看的淡入淡出动画 */
 .terminal-fade-enter-active {
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .terminal-fade-leave-active {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .terminal-fade-enter-from {
   opacity: 0;
-  transform: scale(0.95) translateY(30px);
-  filter: blur(8px);
-  pointer-events: none;
-  visibility: hidden;
+}
+
+.terminal-fade-enter-from .terminal-window {
+  transform: scale(0.85) translateY(60px) rotateX(15deg);
+  filter: blur(15px);
+  opacity: 0;
 }
 
 .terminal-fade-leave-to {
   opacity: 0;
-  transform: scale(0.9) translateY(-20px) rotateX(-5deg);
-  filter: blur(15px);
-  pointer-events: none;
-  visibility: hidden;
+  backdrop-filter: blur(0px) saturate(100%) brightness(1) !important;
+  -webkit-backdrop-filter: blur(0px) saturate(100%) brightness(1) !important;
+}
+
+.terminal-fade-leave-to .terminal-window {
+  transform: scale(0.85) translateY(50px) rotateX(10deg);
+  filter: blur(20px);
+  opacity: 0;
 }
 
 .terminal-fade-enter-to,
 .terminal-fade-leave-from {
   opacity: 1;
-  transform: scale(1) translateY(0);
+}
+
+.terminal-fade-enter-to .terminal-window,
+.terminal-fade-leave-from .terminal-window {
+  transform: scale(1) translateY(0) rotateX(0deg);
   filter: blur(0px);
-  pointer-events: auto;
-  visibility: visible;
+  opacity: 1;
+}
+
+/* 为终端窗口添加过渡效果 */
+.terminal-window {
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-origin: center center;
+  perspective: 1000px;
 }
 
 /* 隐藏滚动条 */

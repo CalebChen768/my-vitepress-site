@@ -1,5 +1,5 @@
 <template>
-  <Avatar @click="showTerminal = true" />
+  <Avatar @click="handleAvatarClick" />
   <div class="shareCard">
     <h1 class="title">
       <span>Hi, I'm Caleb </span>
@@ -17,6 +17,16 @@ import Avatar from './Avatar.vue'
 import Terminal from './Terminal.vue'
 
 const showTerminal = ref(false)
+
+const isMobile = () => {
+  return window.innerWidth <= 768
+}
+
+const handleAvatarClick = () => {
+  if (!isMobile()) {
+    showTerminal.value = true
+  }
+}
 </script>
 
 <style scoped>

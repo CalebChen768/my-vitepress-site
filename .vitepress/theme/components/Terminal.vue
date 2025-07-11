@@ -102,7 +102,10 @@
   const isFading = ref(false)
   
   const isComposing = ref(false)
-  const skipNextEnter = ref(false)
+  const lastCompositionEnd = ref(0) // 记录最后一次 composition 结束的时间
+  const isUserAgent = navigator.userAgent.toLowerCase()
+  const isChrome = isUserAgent.includes('chrome') && !isUserAgent.includes('edge')
+  const isSafari = isUserAgent.includes('safari') && !isUserAgent.includes('chrome')
   
   const { theme } = useData()
   const router = useRouter()
@@ -384,15 +387,31 @@
     input.value = ''
     scrollToBottom()
   }
-  function onCompositionStart() { isComposing.value = true }
-  function onCompositionEnd() { isComposing.value = false; skipNextEnter.value = true }
+  function onCompositionStart() { 
+    isComposing.value = true 
+  }
+  
+  function onCompositionEnd() { 
+    isComposing.value = false
+    lastCompositionEnd.value = Date.now()
+  }
+  
   function onEnter() {
     if (isComposing.value) return
-    if (skipNextEnter.value) { skipNextEnter.value = false; return }
+    
+    // 为不同浏览器使用不同的时间阈值
+    const threshold = isChrome ? 30 : isSafari ? 20 : 25
+    const timeSinceComposition = Date.now() - lastCompositionEnd.value
+    const isImmediateAfterComposition = lastCompositionEnd.value > 0 && timeSinceComposition < threshold
+    
+    if (isImmediateAfterComposition) { 
+      return 
+    }
+    
     handleCommand()
   }
 function handleTab() {
-  skipNextEnter.value = false
+  lastCompositionEnd.value = 0 // 重置时间戳
   const raw = input.value
   if (!raw.includes(' ')) {
     const cmds = ['pwd', 'ls', 'cd', 'cat', 'head', 'tail', 'help', 'clear', 'exit', 'rm', 'mv', 'cp', 'sudo']

@@ -44,3 +44,97 @@
 .VPDocOutlineDropdown {
   display: none !important;
 }
+
+/* 限制全局过渡效果，避免影响页面切换 */
+button, .button, a:not([class*="VP"]), .blog, .article {
+  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, 
+              transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+}
+
+/* 移除页面切换动画以防止闪烁 */
+.VPContent {
+  /* animation: fadeInUp 0.2s ease-out; */
+  /* will-change: opacity, transform; */
+}
+
+/* 简化Layout样式 */
+.Layout {
+  opacity: 1;
+}
+
+/* 优化页面切换的视觉连续性 */
+body {
+  background-color: var(--vp-c-bg);
+}
+
+/* 减少页面跳转时的闪烁 */
+html {
+  background-color: var(--vp-c-bg);
+}
+
+/* 页面容器背景 */
+#app {
+  background-color: var(--vp-c-bg);
+}
+
+/* 移除可能影响导航的样式 */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 移除平滑滚动，避免奇怪的滚动行为 */
+html {
+  /* scroll-behavior: smooth; */
+}
+
+/* 链接悬停效果优化 */
+a {
+  transition: all 0.25s ease;
+}
+
+a:hover {
+  transform: translateY(-1px);
+}
+
+/* 按钮通用悬停效果 */
+button, .button {
+  transition: all 0.25s ease;
+  transform-origin: center;
+}
+
+button:hover, .button:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* 卡片悬停效果优化 */
+.card, .blog, .article {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 输入框聚焦效果 */
+input, textarea {
+  transition: all 0.25s ease;
+}
+
+input:focus, textarea:focus {
+  transform: scale(1.01);
+  box-shadow: 0 0 0 2px var(--vp-c-brand-light);
+}
+
+/* 加载动画 */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.loading {
+  animation: pulse 2s infinite;
+}

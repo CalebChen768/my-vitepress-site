@@ -3,11 +3,11 @@
     <h1 class="tags-header">Tags</h1>
     <div class="tags">
       <span
-        @click="toggleTag(key)"
+        @click="toggleTag(String(key))"
         v-for="(item, key) in data"
         class="tag"
         :style="getFontSize(data[key].length)"
-        :class="{ activetag: selectTag === key }"
+        :class="{ activetag: selectTag === String(key) }"
       >
         {{ key }} <span class="tag-length">{{ data[key].length }}</span>
       </span>
@@ -48,7 +48,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useData, withBase } from "vitepress";
 import { initTags } from "../utils/utils";
 
@@ -58,11 +58,17 @@ let selectTag = ref("");
 const toggleTag = (tag: string) => {
   selectTag.value = tag;
 };
+
 // set font-size
 const getFontSize = (length: number) => {
   let size = length * 0.04 + 0.85;
   return { fontSize: `${size}em` };
 };
+
+// 确保页面从顶部开始
+onMounted(() => {
+  window.scrollTo({ top: 0, behavior: 'auto' });
+});
 </script>
 
 <style scoped>

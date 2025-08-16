@@ -2,7 +2,9 @@
     <UserCard />
     <h1 class="blog-title">Blogs</h1>
     <div class="blogList">
-      <a class="blog" v-for="item in posts" :href="withBase(item.regularPath)">
+      <a class="blog" v-for="(item, index) in posts" :href="withBase(item.regularPath)" 
+         :style="shouldAnimate ? { animationDelay: `${index * 0.1}s` } : {}" 
+         :class="{ 'no-animation': !shouldAnimate }" :key="index" @click="handleBlogClick">
         <div class="title">{{ item.frontMatter.title }}</div>
         <div class="meta">
           <div class="date">{{ transDate(item.frontMatter.date) }}</div>
@@ -29,14 +31,37 @@
     </div>
   </template>
   <script lang="ts" setup>
-  import { ref } from "vue";
+  import { ref, onMounted } from "vue";
   import UserCard from "../components/UserCard.vue";
   import { useData, withBase } from "vitepress";
   interface post {
     regularPath: string;
-    frontMatter: object;
+    frontMatter: {
+      title: string;
+      date: string;
+      tags: string[];
+    };
   }
   const { theme } = useData();
+  
+  // 控制是否播放入场动画
+  const shouldAnimate = ref(true);
+  
+  onMounted(() => {
+    // 确保页面从顶部开始
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    
+    // 检查是否是从其他页面返回
+    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+    if (navigation && navigation.type === 'back_forward') {
+      shouldAnimate.value = false;
+    }
+    
+    // 或者检查 document.referrer 是否来自同一域名的其他页面
+    if (document.referrer && document.referrer.includes(window.location.origin) && !document.referrer.includes('/#/')) {
+      shouldAnimate.value = false;
+    }
+  });
   
   // get posts
   let postsAll = theme.value.posts || [];
@@ -59,7 +84,7 @@
   //});
   //console.log(postsAll)
   // pagination
-  let allMap = {};
+  let allMap: { [key: number]: post[] } = {};
   for (let i = 0; i < pagesNum; i++) {
     allMap[i] = [];
   }
@@ -71,14 +96,29 @@
     allMap[index].push(postsAll[i]);
   }
   // set posts
-  let posts = ref([]);
+  let posts = ref<post[]>([]);
   posts.value = allMap[pageCurrent.value - 1];
   
   // click pagination
-  const go = (i) => {
+  const go = (i: number) => {
     pageCurrent.value = i;
     posts.value = allMap[pageCurrent.value - 1];
   };
+  // handle blog click with smooth transition
+  const handleBlogClick = (event: MouseEvent) => {
+    const target = event.currentTarget as HTMLElement;
+    if (target) {
+      // 添加点击反馈动画
+      target.style.transform = 'translate(-1px, -1px) scale(0.99)';
+      target.style.transition = 'all 0.1s ease';
+      
+      // 短暂延迟后恢复，然后进行页面跳转
+      setTimeout(() => {
+        target.style.transform = 'translate(-3px, -3px) scale(1.01)';
+      }, 100);
+    }
+  };
+
   // timestamp transform
   const transDate = (date: string) => {
     const dateArray = date.split("-");
@@ -159,41 +199,71 @@
     align-items: center;
   }
   .blog {
-    width: 90%;
-    min-height: 90px ;
+    width: 95%;
+    min-height: 95px ;
     align-items: flex-start;
-    display: block;
-    border-radius: 10px;
-    padding: 15px 20px;
-    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 18px;
+    padding: 18px 20px;
+    margin: 13px;
     background: var(--vp-c-bg);
-    max-width: 600px;
-    box-shadow: 6px 6px var(--vp-c-brand);
-    border: 4px solid #3f4e4f;
+    max-width: 620px;
+    box-shadow: 8px 8px var(--vp-c-brand);
+    border: 5px solid #3f4e4f;
     cursor: pointer;
+    animation: slideInUp 0.6s ease-out both;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  
+  @keyframes slideInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .blog.no-animation {
+    animation: none;
+    opacity: 1;
+    transform: translateY(0);
   }
   .blog:hover {
     text-decoration: none;
-    transform: translate(-2px, -2px);
-    box-shadow: 10px 10px var(--vp-c-brand);
+    transform: translate(-3px, -3px) scale(1.01);
+    box-shadow: 15px 15px var(--vp-c-brand);
+  }
+  
+  .blog:active {
+    transform: translate(-1px, -1px) scale(0.99);
+    box-shadow: 6px 6px var(--vp-c-brand);
+    transition: all 0.1s ease;
   }
   .title {
     color: var(--vp-c-brand-light);
-    font-size: 1.3em;
-    margin-bottom: 5px;
+    font-size: 1.4em;
+    margin-bottom: 6px;
     font-weight: bold;
+    /* 行距 */
+    line-height: 1.3;
   }
   .date {
     /* padding-bottom: 7px; */
-    margin-right: 10px;
+    margin-left: 2px;
+    margin-right: 15px;
     white-space: nowrap;
   }
+  
   
   .meta {
     display: flex;
     align-items: center;
     font-size: 0.9em;
     color: var(--vp-c-text-2);
+    margin-top: auto;
+    padding-top: 10px;
   }
   
   .tags {
@@ -210,6 +280,18 @@
     white-space: nowrap; 
   }
   
+  @media (max-width: 600px) {
+    .title {
+      font-size: 1.3em;
+    }
+    .date {
+      margin-left: 2px;
+      margin-right: 10px;
+    }
+    .meta {
+      padding-top: 8px;
+    }
+  }
   .pagination {
     display: flex;
     align-items: center;

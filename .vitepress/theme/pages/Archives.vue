@@ -22,11 +22,16 @@
 
 <script lang="ts" setup>
 import { useData, withBase } from "vitepress";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useYearSort } from "../utils/utils";
 
 const { theme } = useData();
 const data = computed(() => useYearSort(theme.value.posts));
+
+// 确保页面从顶部开始
+onMounted(() => {
+  window.scrollTo({ top: 0, behavior: 'auto' });
+});
 </script>
 
 <style scoped>

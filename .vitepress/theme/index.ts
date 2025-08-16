@@ -18,11 +18,13 @@ import "./custom.css";
 export default {
   extends: Theme,
   Layout: MyLayout,
-  enhanceApp({ app }: EnhanceAppContext) {
+  enhanceApp({ app, router }: EnhanceAppContext) {
     app.component("Archives", Archives);
     app.component("Tags", Tags);
     app.component("Home", Home);
     app.component("Me", Me);
     app.use(TwoslashFloatingVue);
+    
+    // 移除路由守卫，让各个组件自己处理滚动
   },
 };

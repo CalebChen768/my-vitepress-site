@@ -62,7 +62,9 @@
   
   onMounted(() => {
     // 确保页面从顶部开始
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
     
     // 检查是否是从其他页面返回
     const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
@@ -75,7 +77,7 @@
     }
     
     // 或者检查 document.referrer 是否来自同一域名的其他页面
-    if (document.referrer && document.referrer.includes(window.location.origin) && !document.referrer.includes('/#/')) {
+    if (typeof window !== 'undefined' && document.referrer && document.referrer.includes(window.location.origin) && !document.referrer.includes('/#/')) {
       shouldAnimate.value = false;
       // 短暂延迟后重新启用动画
       setTimeout(() => {

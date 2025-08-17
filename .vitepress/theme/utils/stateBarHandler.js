@@ -2,6 +2,11 @@
 (function() {
   'use strict';
   
+  // 检查是否在客户端环境
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return;
+  }
+  
   // 防抖函数，减少频繁执行
   function debounce(func, wait) {
     let timeout;

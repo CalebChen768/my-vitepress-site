@@ -50,7 +50,9 @@ const back = () => {
   
   // 短暂延迟后滚动并跳转
   setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
     history.back();
     // 清理遮罩
     setTimeout(() => {

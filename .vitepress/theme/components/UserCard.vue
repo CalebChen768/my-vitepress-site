@@ -15,21 +15,31 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Avatar from './Avatar.vue'
 import Terminal from './Terminal.vue'
 
 const showTerminal = ref(false)
+const isMobile = ref(false)
 
-const isMobile = () => {
-  return window.innerWidth <= 768
+const checkMobile = () => {
+  if (typeof window !== 'undefined') {
+    isMobile.value = window.innerWidth <= 768
+  }
 }
 
 const handleAvatarClick = () => {
-  if (!isMobile()) {
+  if (!isMobile.value) {
     showTerminal.value = true
   }
 }
+
+onMounted(() => {
+  checkMobile()
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', checkMobile)
+  }
+})
 </script>
 
 <style scoped>

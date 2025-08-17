@@ -30,7 +30,10 @@ const data = computed(() => useYearSort(theme.value.posts));
 
 // 确保页面从顶部开始
 onMounted(() => {
-  window.scrollTo({ top: 0, behavior: 'auto' });
+  // 确保页面从顶部开始
+  if (typeof window !== 'undefined') {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
 });
 </script>
 

@@ -45,6 +45,90 @@
   display: none !important;
 }
 
+/* 隐藏所有大纲导航相关组件 */
+.VPLocalNavOutlineDropdown,
+.VPDocOutlineDropdown,
+.VPDocOutline,
+.VPDocOutlineItem,
+.VPDocOutlineTitle,
+.VPDocOutlineBadge,
+.VPDocOutlineLink,
+.VPDocOutlineItem .content,
+.VPDocOutlineItem .indicator,
+.VPDocOutlineItem .indicator-wrapper,
+.VPDocOutlineItem .indicator-wrapper .indicator {
+  display: none !important;
+}
+
+/* 隐藏移动端的大纲导航 */
+@media (max-width: 960px) {
+  .VPLocalNavOutlineDropdown,
+  .VPDocOutlineDropdown,
+  .VPDocOutline,
+  .VPDocOutlineItem,
+  .VPDocOutlineTitle,
+  .VPDocOutlineBadge,
+  .VPDocOutlineLink {
+    display: none !important;
+  }
+  
+  /* 隐藏"On this page"按钮 */
+  .VPLocalNavOutlineDropdown button,
+  .VPLocalNavOutlineDropdown .menu-text,
+  .VPLocalNavOutlineDropdown .icon {
+    display: none !important;
+  }
+}
+
+/* 处理中等屏幕尺寸上的状态栏问题 */
+@media (min-width: 768px) and (max-width: 1279px) {
+  /* 只隐藏大纲导航，保留主要导航菜单 */
+  .VPLocalNavOutlineDropdown,
+  .VPDocOutlineDropdown,
+  .VPDocOutline,
+  .VPDocOutlineItem,
+  .VPDocOutlineTitle,
+  .VPDocOutlineBadge,
+  .VPDocOutlineLink,
+  .VPLocalNav {
+    display: none !important;
+  }
+  
+  /* 确保页面内容占满整个宽度 */
+  .VPContent {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* 只隐藏大纲导航相关组件，保留主要导航 */
+.VPLocalNavOutlineDropdown,
+.VPDocOutlineDropdown,
+.VPDocOutline,
+.VPDocOutlineItem,
+.VPDocOutlineTitle,
+.VPDocOutlineBadge,
+.VPDocOutlineLink,
+.VPDocOutlineItem .content,
+.VPDocOutlineItem .indicator,
+.VPDocOutlineItem .indicator-wrapper,
+.VPDocOutlineItem .indicator-wrapper .indicator {
+  display: none !important;
+}
+
+/* 隐藏整个VPLocalNav容器，解决中等屏幕尺寸上的线条问题 */
+.VPLocalNav {
+  display: none !important;
+}
+
+/* 处理大纲导航的额外样式 */
+.VPLocalNavOutlineDropdown::after,
+.VPLocalNavOutlineDropdown::before,
+.VPDocOutlineDropdown::after,
+.VPDocOutlineDropdown::before {
+  display: none !important;
+}
+
 /* 限制全局过渡效果，避免影响页面切换 */
 button, .button, a:not([class*="VP"]), .blog, .article {
   transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, 
@@ -137,4 +221,162 @@ input:focus, textarea:focus {
 
 .loading {
   animation: pulse 2s infinite;
+}
+
+/* 处理中等屏幕尺寸上的状态栏问题 */
+@media (min-width: 768px) and (max-width: 1279px) {
+  /* 只隐藏大纲导航，保留主要导航菜单 */
+  .VPLocalNavOutlineDropdown,
+  .VPDocOutlineDropdown,
+  .VPDocOutline,
+  .VPDocOutlineItem,
+  .VPDocOutlineTitle,
+  .VPDocOutlineBadge,
+  .VPDocOutlineLink {
+    display: none !important;
+  }
+  
+  /* 确保页面内容占满整个宽度 */
+  .VPContent {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* 只隐藏大纲导航相关组件，保留主要导航 */
+.VPLocalNavOutlineDropdown,
+.VPDocOutlineDropdown,
+.VPDocOutline,
+.VPDocOutlineItem,
+.VPDocOutlineTitle,
+.VPDocOutlineBadge,
+.VPDocOutlineLink,
+.VPDocOutlineItem .content,
+.VPDocOutlineItem .indicator,
+.VPDocOutlineItem .indicator-wrapper,
+.VPDocOutlineItem .indicator-wrapper .indicator {
+  display: none !important;
+}
+
+/* 处理大纲导航的额外样式 */
+.VPLocalNavOutlineDropdown::after,
+.VPLocalNavOutlineDropdown::before,
+.VPDocOutlineDropdown::after,
+.VPDocOutlineDropdown::before {
+  display: none !important;
+}
+
+/* 隐藏所有可能的边框和分割线 */
+.VPNavBar,
+.VPNavBar .content,
+.VPNavBar .content .content-body,
+.VPNavBar .content .content-body .content-body .VPNavBarMenu,
+.VPNavBar .content .content-body .content-body .VPNavBarMenu .VPNavBarMenuLink {
+  border: none !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  box-shadow: none !important;
+}
+
+/* 确保没有固定定位的导航栏 */
+.VPNavBar[style*="position: fixed"],
+.VPNavBar[style*="position:fixed"],
+.VPNavBar[style*="position: sticky"],
+.VPNavBar[style*="position:sticky"] {
+  display: none !important;
+}
+
+/* 处理可能的 z-index 问题 */
+.VPNavBar {
+  z-index: -1 !important;
+  pointer-events: none !important;
+}
+
+/* 文章内容页面大标题字体优化 */
+/* 只针对文章内容页面的标题，不影响主页文章列表 */
+.VPDoc .title {
+  font-family: "LXGW WenKai Lite", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--vp-c-text-1);
+  margin: 2rem 0 1.5rem 0;
+  text-align: left;
+  letter-spacing: -0.02em;
+}
+
+/* 深色模式下的标题颜色调整 */
+.dark .VPDoc .title {
+  color: var(--vp-c-text-1);
+}
+
+/* 响应式标题字体大小 */
+@media (max-width: 768px) {
+  .VPDoc .title {
+    font-size: 1.8rem;
+    margin: 1.5rem 0 1rem 0;
+  }
+}
+
+/* 电脑版文章内容页面整体优化 - 达到120%缩放效果 */
+@media (min-width: 769px) {
+  /* 增加文章内容区域的最大宽度 */
+  .VPDoc {
+    max-width: 90% !important;
+    margin: 0 auto;
+  }
+  
+  /* 增大正文字体大小 */
+  .VPDoc p,
+  .VPDoc li,
+  .VPDoc td,
+  .VPDoc th {
+    font-size: 1.1rem !important;
+    line-height: 1.8 !important;
+  }
+  
+  /* 增大标题字体大小 */
+  .VPDoc h1 {
+    font-size: 2.4rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .VPDoc h2 {
+    font-size: 2rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  .VPDoc h3 {
+    font-size: 1.6rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  .VPDoc h4 {
+    font-size: 1.4rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* 增大代码块字体 */
+  .VPDoc pre,
+  .VPDoc code {
+    font-size: 1rem !important;
+  }
+  
+  /* 增大引用块字体 */
+  .VPDoc blockquote {
+    font-size: 1.1rem !important;
+    line-height: 1.8 !important;
+  }
+  
+  /* 增大表格字体 */
+  .VPDoc table {
+    font-size: 1.1rem !important;
+  }
+  
+  /* 调整页面整体布局 */
+  .VPContent {
+    max-width: 1200px !important;
+    margin: 0 auto;
+    padding: 0 2rem !important;
+  }
 }

@@ -74,6 +74,17 @@ async function config() {
         },
       ],
       aside: false,
+      outline: false,
+      outlineTitle: false,
+      docFooter: {
+        prev: false,
+        next: false
+      },
+      docHeader: {
+        prev: false,
+        next: false
+      },
+      localNav: false,
     },
     markdown: {
       theme: {

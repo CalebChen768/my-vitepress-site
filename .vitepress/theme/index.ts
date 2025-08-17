@@ -16,6 +16,7 @@ import "@shikijs/vitepress-twoslash/style.css";
 import type { EnhanceAppContext } from "vitepress";
 
 import "./custom.css";
+import "./utils/stateBarHandler.js";
 
 export default {
   extends: Theme,

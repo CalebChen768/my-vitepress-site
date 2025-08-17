@@ -31,9 +31,9 @@
     </div>
   </template>
   <script lang="ts" setup>
-  import { ref, onMounted } from "vue";
+  import { ref, onMounted, watch } from "vue";
   import UserCard from "../components/UserCard.vue";
-  import { useData, withBase } from "vitepress";
+  import { useData, withBase, useRoute } from "vitepress";
   interface post {
     regularPath: string;
     frontMatter: {
@@ -43,9 +43,22 @@
     };
   }
   const { theme } = useData();
+  const route = useRoute();
   
   // 控制是否播放入场动画
   const shouldAnimate = ref(true);
+  
+  // 监听路由变化，避免从其他页面返回时触发动画
+  watch(() => route.path, (newPath, oldPath) => {
+    // 如果是从其他页面返回到主页，禁用动画
+    if (newPath === '/' && oldPath && oldPath !== '/') {
+      shouldAnimate.value = false;
+      // 短暂延迟后重新启用动画
+      setTimeout(() => {
+        shouldAnimate.value = true;
+      }, 200);
+    }
+  });
   
   onMounted(() => {
     // 确保页面从顶部开始
@@ -55,11 +68,19 @@
     const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
     if (navigation && navigation.type === 'back_forward') {
       shouldAnimate.value = false;
+      // 短暂延迟后重新启用动画
+      setTimeout(() => {
+        shouldAnimate.value = true;
+      }, 200);
     }
     
     // 或者检查 document.referrer 是否来自同一域名的其他页面
     if (document.referrer && document.referrer.includes(window.location.origin) && !document.referrer.includes('/#/')) {
       shouldAnimate.value = false;
+      // 短暂延迟后重新启用动画
+      setTimeout(() => {
+        shouldAnimate.value = true;
+      }, 200);
     }
   });
   
@@ -101,8 +122,22 @@
   
   // click pagination
   const go = (i: number) => {
+    // 分页切换时禁用动画
+    shouldAnimate.value = false;
+    
     pageCurrent.value = i;
     posts.value = allMap[pageCurrent.value - 1];
+    
+    // 滚动到Blogs标题位置
+    const blogTitle = document.querySelector('.blog-title');
+    if (blogTitle) {
+      blogTitle.scrollIntoView({ behavior: 'auto', block: 'start' });
+    }
+    
+    // 短暂延迟后重新启用动画
+    setTimeout(() => {
+      shouldAnimate.value = true;
+    }, 100);
   };
   // handle blog click with smooth transition
   const handleBlogClick = (event: MouseEvent) => {
@@ -226,9 +261,26 @@
   }
   
   .blog.no-animation {
-    animation: none;
-    opacity: 1;
-    transform: translateY(0);
+    animation: none !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: none !important;
+  }
+  
+  /* 确保no-animation状态下的所有动画都被禁用 */
+  .blogList .blog.no-animation {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: none !important;
+  }
+  
+  /* 分页切换时完全禁用所有动画相关属性 */
+  .blogList:has(.blog.no-animation) .blog {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: none !important;
   }
   .blog:hover {
     text-decoration: none;

@@ -9,6 +9,8 @@ import Home from "./pages/Home.vue";
 import Me from "./pages/Me.vue"
 // @ts-ignore
 import MyLayout from "./components/MyLayout.vue";
+import SmartImage from "./components/SmartImage.vue";
+import ArticleImage from "./components/ArticleImage.vue";
 import TwoslashFloatingVue from "@shikijs/vitepress-twoslash/client";
 import "@shikijs/vitepress-twoslash/style.css";
 import type { EnhanceAppContext } from "vitepress";
@@ -23,6 +25,8 @@ export default {
     app.component("Tags", Tags);
     app.component("Home", Home);
     app.component("Me", Me);
+    app.component("SmartImage", SmartImage);
+    app.component("ArticleImage", ArticleImage);
     app.use(TwoslashFloatingVue);
     
     // 移除路由守卫，让各个组件自己处理滚动

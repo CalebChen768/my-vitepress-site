@@ -305,6 +305,13 @@ input:focus, textarea:focus {
   letter-spacing: -0.02em;
 }
 
+/* 大屏幕下增加文章标题与顶端的距离 */
+@media (min-width: 769px) {
+  .VPDoc .title {
+    margin-top: 4rem !important;
+  }
+}
+
 /* 深色模式下的标题颜色调整 */
 .dark .VPDoc .title {
   color: var(--vp-c-text-1);
@@ -315,6 +322,20 @@ input:focus, textarea:focus {
   .VPDoc .title {
     font-size: 1.8rem;
     margin: 1.5rem 0 1rem 0;
+  }
+}
+
+/* 主页 UserCard 在大屏幕下的顶部间距 */
+@media (min-width: 769px) {
+  .shareCard {
+    margin-top: 1.5rem !important;
+  }
+}
+
+/* 主页 Avatar 在大屏幕下的顶部间距 */
+@media (min-width: 769px) {
+  .avatar-wrapper {
+    margin-top: 3rem !important;
   }
 }
 
